@@ -1,1 +1,1 @@
-heroku config:set APP_SETTINGS=config.ProductionConfig --remote heroku
+heroku config:set APP_SETTING=config.ProductionConfig --remote heroku
