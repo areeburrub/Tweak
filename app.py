@@ -6,7 +6,6 @@ from wtforms.validators import InputRequired, Email, Length
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
-
 app = Flask(__name__) 
 
 
@@ -17,11 +16,15 @@ app.config.from_object(os.environ['APP_SETTING'])
 
 Bootstrap(app)
 db = SQLAlchemy(app)
+
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
 class User(UserMixin, db.Model):
+
+    __tablename__ = "user"
+
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(15), unique=True)
     email = db.Column(db.String(50), unique=True)
@@ -55,7 +58,7 @@ def login():
             if check_password_hash(user.password, form.password.data):
                 login_user(user, remember=form.remember.data)
                 return redirect(url_for('dashboard'))
-        return '<h1>Invalid username or password</h1>'
+        return render_template('login.html', form=form, msg='Wrong Username or Password')
         #return '<H1>' + form.username.data + ' ' + form.password.data + '</H1>'
 
     return render_template('login.html', form=form)
