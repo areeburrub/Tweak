@@ -7,10 +7,14 @@ from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 
-app = Flask(__name__)
-app.config['SECRET_KEY'] = 'Thisissecret'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test3.db'
-app.config['TESTING'] = False
+app = Flask(__name__) 
+
+
+#config
+import os
+app.config.from_object(os.environ['APP_SETTING'])
+
+
 Bootstrap(app)
 db = SQLAlchemy(app)
 login_manager = LoginManager()
@@ -84,4 +88,4 @@ def logout():
     return redirect(url_for('index'))
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
