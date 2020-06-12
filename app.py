@@ -111,7 +111,7 @@ def login():
         if user:
             if check_password_hash(user.password, form.password.data):
                 login_user(user, remember=form.remember.data)
-                return redirect(url_for('dashboard', cusername = current_user.username))
+                return redirect(url_for('dashboard', pro = current_user.username))
         return render_template('login.html', form=form, msg='Wrong Username or Password')
         #return '<H1>' + form.username.data + ' ' + form.password.data + '</H1>'
 
