@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 
 {% block head %}
-
 {% endblock %}
 
 {% block header %}
@@ -19,6 +18,14 @@
 
 {% block body %}
 <p class="inline-flex items-center border-0 py-1 px-3 rounded text-2xl mt-4 md:mt-0" >
- Welcome, {{ name }}
+ {% if name == profile %}
+ <h1> Welcome, {{ profile }}</h1>
+ {% else %}
+ <h1> This is {{ profile }}'s Profile and you are {{ name }} and you are {{ admin }}</h1>
+ {% endif %}
 </p>
+
+<div class="w-20 h-20 rounded-full inline-flex items-center justify-center bg-gray-200 text-gray-400">
+  <img class="w-20 h-20 rounded-full " src="{{ image_file }}" alt="Areeb ur Rub">
+</div>
 {% endblock %}
