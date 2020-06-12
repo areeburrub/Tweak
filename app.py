@@ -154,11 +154,12 @@ def signup():
 
 
 #Link to Dashboard
-@app.route('/profile/<string:cusername>')
+@app.route('/profile/<string:pro>')
 @login_required
-def dashboard(cusername):
-    image_file = url_for('static',filename='profile_pics/'+current_user.profile_picture)
-    currentuser = User.query.filter_by(username=cusername).one()
+def dashboard(pro):
+    user = User.query.filter_by(username=pro).first()
+    image_file = url_for('static',filename='profile_pics/'+user.profile_picture)
+    currentuser = User.query.filter_by(username=pro).one()
     return render_template('profile.html', admin=current_user.admin, image_file = image_file, name = str(current_user.username), profile = str(currentuser))
 
 #Link to Posts
@@ -184,11 +185,13 @@ def logout():
 class MyAdminIndexView(AdminIndexView):
     def is_accessible(self):
 
-        return current_user.is_authenticated
-        UserRole = current_user.admin
-        if (UserRole == True):
-            return True
-        elif(UserRole == False):
+        if (current_user.is_anonymous == False):
+            UserRole = current_user.admin
+            if (UserRole == True):
+                return True
+            elif(UserRole == False):
+                return False
+        else:
             return False
     
     def inaccessible_callback(self, name, **kwargs):

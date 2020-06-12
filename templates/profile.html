@@ -17,15 +17,30 @@
 {% endblock %}
 
 {% block body %}
-<p class="inline-flex items-center border-0 py-1 px-3 rounded text-2xl mt-4 md:mt-0" >
- {% if name == profile %}
- <h1> Welcome, {{ profile }}</h1>
- {% else %}
- <h1> This is {{ profile }}'s Profile and you are {{ name }} and you are {{ admin }}</h1>
- {% endif %}
-</p>
+<!--
+<section class="text-gray-700 body-font">
+  <div class="container px-5 py-10 mx-auto flex flex-wrap flex-col">
+    <div class="flex flex-col w-full text-center"></div>
+          <img class="h-24 w-24 content-cente rounded-full " alt="hero" src="{{ image_file }}">
+          {% if name == profile %}
+          <h1 class="text-xl font-medium title-font mb-1 text-gray-900"> Welcome, {{ profile }}</h1>
+          <p class="lg:w-2/3 leading-relaxed text-base">Descripton</p>
+          {% else %}
+          <h1 class="text-xl font-medium title-font mb-1 text-gray-900">This is {{ profile }}'s</h1>
+          <p class="lg:w-2/3 leading-relaxed text-base">Descripton This is {{ profile }}'s Profile and you are {{ name }} and you are {{ admin }}</p>
+          {% endif %}
+      </div>
+  </div>
+</section>-->
 
-<div class="w-20 h-20 rounded-full inline-flex items-center justify-center bg-gray-200 text-gray-400">
-  <img class="w-20 h-20 rounded-full " src="{{ image_file }}" alt="Areeb ur Rub">
+<div class="max-w-sm rounded overflow-hidden shadow-lg m-auto mt-5">
+  <img class="w-full" src="{{ image_file }}" alt="Profile Picture">
+  <div class="px-6 py-4">
+    <div class="font-bold text-xl mb-2">{{ profile }}</div>
+    <p class="text-gray-700 text-base">
+      About Goes Here
+    </p>
+  </div>
 </div>
+
 {% endblock %}
