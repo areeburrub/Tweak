@@ -5,24 +5,18 @@
 <title> Tweak Chat || Index </title>
 {% endblock %}
 
-{% block header %}
-<div class="inline-block">
-  <a href="{{ url_for('login') }}">
-    <button class="inline-flex items-center bg-gray-200 border-0 py-1 px-3 focus:outline-none hover:bg-blue-300 rounded text-base mt-4 md:mt-0">Sign in
-        <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-4 h-4 ml-1" viewBox="0 0 24 24">
-            <path d="M5 12h14M12 5l7 7-7 7"></path>
-        </svg>
-    </button>
-  </a>
+{% block nav %}
 
-  <a href="{{ url_for('signup') }}">
-    <button class="inline-flex items-center bg-gray-200 border-0 py-1 px-3 focus:outline-none hover:bg-blue-300 rounded text-base mt-4 md:mt-0">Sign up
-      <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-4 h-4 ml-1" viewBox="0 0 24 24">
-          <path d="M5 12h14M12 5l7 7-7 7"></path>
-      </svg>
-    </button>
+<li>
+  <a href="{{ url_for('login') }}">
+    <button type="button" class="btn btn-secondary d-flex nav-item mr-2">Login</button>
   </a>
-</div>
+</li>
+<li>
+    <a href="{{ url_for('signup') }}">
+      <button type="button" class="btn btn-secondary d-flex nav-item">Signup</button>
+    </a>
+</li>
 {% endblock %}
 
 {% block body %}

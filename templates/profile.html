@@ -1,46 +1,97 @@
 {% extends "base.html" %}
 
 {% block head %}
+
+<!-- Profile Card CSS Starts -->
+<style type="text/css">
+.card-profile {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  max-width: 300px;
+  text-align: center;
+}
+
+
+.button-update {
+  border: none;
+  outline: 0;
+  display: inline-block;
+  padding: 8px;
+  color: white;
+  background-color: #000;
+  text-align: center;
+  cursor: pointer;
+  width: 100%;
+  font-size: 18px;
+}
+
+
+.button-update:hover, a:hover {
+  opacity: 0.7;
+}
+</style>
+<!-- Profile Card CSS Ends -->
 {% endblock %}
 
-{% block header %}
-<div class="inline-block">
-
+{% block nav %}
+<li>
 <a href="{{ url_for('logout') }}">
-  <button class="inline-flex items-center bg-gray-200 border-0 py-1 px-3 focus:outline-none hover:bg-gray-300 rounded text-base mt-4 md:mt-0">Logout
-      <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-4 h-4 ml-1" viewBox="0 0 24 24">
-          <path d="M5 12h14M12 5l7 7-7 7"></path>
-      </svg>
-  </button>
+  <button type="button" class="btn btn-secondary d-flex nav-item">Logout</button>
 </a>
-</div>
+</li>
 {% endblock %}
 
 {% block body %}
-<!--
-<section class="text-gray-700 body-font">
-  <div class="container px-5 py-10 mx-auto flex flex-wrap flex-col">
-    <div class="flex flex-col w-full text-center"></div>
-          <img class="h-24 w-24 content-cente rounded-full " alt="hero" src="{{ image_file }}">
-          {% if name == profile %}
-          <h1 class="text-xl font-medium title-font mb-1 text-gray-900"> Welcome, {{ profile }}</h1>
-          <p class="lg:w-2/3 leading-relaxed text-base">Descripton</p>
-          {% else %}
-          <h1 class="text-xl font-medium title-font mb-1 text-gray-900">This is {{ profile }}'s</h1>
-          <p class="lg:w-2/3 leading-relaxed text-base">Descripton This is {{ profile }}'s Profile and you are {{ name }} and you are {{ admin }}</p>
-          {% endif %}
-      </div>
-  </div>
-</section>-->
+  <!-- Page Content -->
+  <div class="container mt-16">
 
-<div class="max-w-sm rounded overflow-hidden shadow-lg m-auto mt-5">
-  <img class="w-full" src="{{ image_file }}" alt="Profile Picture">
-  <div class="px-6 py-4">
-    <div class="font-bold text-xl mb-2">{{ profile }}</div>
-    <p class="text-gray-700 text-base">
-      About Goes Here
-    </p>
+    <div class="row">
+
+      <div class="col-lg-3 ">
+        <div class="card-profile mx-auto">
+          <img src="{{ image_file }}" alt="{{ profile }}" style="width:100%">
+          <h1>{{ profile}}</h1>
+          <p>About</p>
+          <p><button class="btn btn-secondary mb-4">edit profile</button></p>
+        </div>
+      </div>
+      <!-- /.col-lg-3 -->
+
+          <div class="col-lg-9">
+            <div class="container">
+              <div class="row">
+
+                <div class="col-lg-3 m-1">
+                  <div class="card h-100">
+                    <div class="card-body">
+                      <h4 class="card-title">
+                        <a href="#">Post Title</a>
+                      </h4>
+                      <h6>by: Posted by</h6>
+                      <p class="card-text">Post body </p>
+                    </div>
+                  </div>
+                </div>
+
+                
+                <div class="col-lg-3 m-1">
+                  <div class="card h-100">
+                    <div class="card-body">
+                      <h4 class="card-title">
+                        <a href="#">Post Title</a>
+                      </h4>
+                      <h6>by: Posted by</h6>
+                      <p class="card-text">Post body </p>
+                    </div>
+                  </div>
+                </div>
+
+                
+              </div>
+            </div>
+          </div>
+    </div>
+    <!-- /.row -->
+
   </div>
-</div>
 
 {% endblock %}

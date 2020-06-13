@@ -1,6 +1,6 @@
 import secrets
 import os
-from flask import Flask, render_template, redirect, url_for
+from flask import Flask, render_template, redirect, url_for, flash
 from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
@@ -135,7 +135,10 @@ def signup():
     form = RegisterForm()
 
     if form.validate_on_submit():
-        ppic = save_picture(form.profile_pic.data)
+        if (form.profile_pic.data):
+            ppic = save_picture(form.profile_pic.data)
+        else:
+            ppic = 'default.png'
         hashed_password = generate_password_hash(form.password.data, method='sha256')
         new_user = User(username=form.username.data, email=form.email.data, password=hashed_password, profile_picture=ppic)
         exists = db.session.query(db.exists().where(User.username == form.username.data )).scalar()
@@ -153,14 +156,19 @@ def signup():
 
 
 
+
 #Link to Dashboard
 @app.route('/profile/<string:pro>')
 @login_required
 def dashboard(pro):
     user = User.query.filter_by(username=pro).first()
-    image_file = url_for('static',filename='profile_pics/'+user.profile_picture)
-    currentuser = User.query.filter_by(username=pro).one()
-    return render_template('profile.html', admin=current_user.admin, image_file = image_file, name = str(current_user.username), profile = str(currentuser))
+    if (user):
+        image_file = url_for('static',filename='profile_pics/'+user.profile_picture)
+        currentuser = User.query.filter_by(username=pro).one()
+        return render_template('profile.html', admin=current_user.admin, image_file = image_file, name = str(current_user.username), profile = str(currentuser))
+    else:
+        return render_template('profile.html', admin=current_user.admin, image_file = url_for('static',filename='profile_pics/default.png'), name = str(current_user.username), profile = 'user dosent exist')
+    
 
 #Link to Posts
 @app.route('/posts')
