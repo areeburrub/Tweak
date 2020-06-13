@@ -1,2 +1,4 @@
 env/
 *.pyc
+static/profile_pics/
+!*static/profile_pics/default.png
