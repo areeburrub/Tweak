@@ -176,7 +176,8 @@ def update(idp):
                 db.session.commit()
                 return redirect(url_for('dashboard', pro = current_user.username))
             except:
-                return 'an error occured'
+                return render_template('login.html', form=form, msg='An Error Occured! Retry After Reload')
+ 
         else:
             user = User.query.filter_by(username=idp).first()
             image_file = url_for('static',filename='profile_pics/'+user.profile_picture)
