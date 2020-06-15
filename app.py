@@ -46,7 +46,7 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(15), unique=True)
     email = db.Column(db.String(50), unique=True)
     password = db.Column(db.String(80))
-    admin = db.Column(db.Boolean, unique=False, default=True)
+    admin = db.Column(db.Boolean, unique=False, default=False)
     profile_picture = db.Column(db.String(20), nullable=False, default='default.png')
     about = db.Column(db.String(30), unique=False)
     
