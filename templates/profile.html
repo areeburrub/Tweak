@@ -6,7 +6,7 @@
 <style type="text/css">
 .card-profile {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-  max-width: 300px;
+  max-width: 75%;
   text-align: center;
 }
 
@@ -42,55 +42,35 @@
 
 {% block body %}
   <!-- Page Content -->
-  <div class="container mt-16">
+  <div class="container mt-16 mb-24">
 
     <div class="row">
 
-      <div class="col-lg-3 ">
-        <div class="card-profile mx-auto">
-          <img src="{{ image_file }}" alt="{{ profile }}" style="width:100%">
+      <div class="col-lg-3 m-1">
+        <div class="card-profile mx-auto card h-100" style="width: 100%;">
+          <div class="w-full h-56" style="overflow: hidden;">
+            <img src="{{ image_file }}" alt="{{ profile }}" class="w-full">
+          </div>
           <h1>{{ profile}}</h1>
-          <p>About</p>
-          <p><button class="btn btn-secondary mb-4">edit profile</button></p>
+          <p class="mx-1" >{{ about }}</p>
+          {% if name == profile %}
+          <p><a href="{{ url_for('update',idp=current_user.username) }}"><button class="btn btn-secondary m-8">edit profile</button></a></p>
+          {% endif %}
         </div>
       </div>
-      <!-- /.col-lg-3 -->
-
-          <div class="col-lg-9">
-            <div class="container">
-              <div class="row">
-
-                <div class="col-lg-3 m-1">
-                  <div class="card h-100">
-                    <div class="card-body">
-                      <h4 class="card-title">
-                        <a href="#">Post Title</a>
-                      </h4>
-                      <h6>by: Posted by</h6>
-                      <p class="card-text">Post body </p>
-                    </div>
-                  </div>
-                </div>
-
-                
-                <div class="col-lg-3 m-1">
-                  <div class="card h-100">
-                    <div class="card-body">
-                      <h4 class="card-title">
-                        <a href="#">Post Title</a>
-                      </h4>
-                      <h6>by: Posted by</h6>
-                      <p class="card-text">Post body </p>
-                    </div>
-                  </div>
-                </div>
-
-                
-              </div>
-            </div>
+      <div class="col-lg-3 m-1">
+        <div class="card h-100" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5);">
+          <div class="card-body">
+            <p class="card-title text-uppercase lead" style="overflow: hidden;  max-height: 15ch;">
+              <a href="#">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur</a>
+            </p>
+            <small class="card-subtitle mb-2 text-muted">by: Posted by</small>
+            <p class="card-text" style="overflow: hidden;  max-height: 14ch;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur</p>
           </div>
+        </div>
+      </div>
     </div>
-    <!-- /.row -->
+    
 
   </div>
 

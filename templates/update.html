@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block head %}
+
+<!-- Profile Card CSS Starts -->
+<style type="text/css">
+.card-profile {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  max-width: 75%;
+  text-align: center;
+}
+
+
+.button-update {
+  border: none;
+  outline: 0;
+  display: inline-block;
+  padding: 8px;
+  color: white;
+  background-color: #000;
+  text-align: center;
+  cursor: pointer;
+  width: 100%;
+  font-size: 18px;
+}
+
+
+.button-update:hover, a:hover {
+  opacity: 0.7;
+}
+</style>
+<!-- Profile Card CSS Ends -->
+{% endblock %}
+
+{% block nav %}
+<li>
+<a href="{{ url_for('logout') }}">
+  <button type="button" class="btn btn-secondary d-flex nav-item">Logout</button>
+</a>
+</li>
+{% endblock %}
+
+{% block body %}
+  <!-- Page Content -->
+  <div class="container mt-16 mb-24">
+
+    <div class="row">
+      
+        <div class="col-lg-4 mx-auto">
+          <div class="flex flex-wrap m-2">
+            <form enctype="multipart/form-data" action="{{ url_for('update',idp=current_user.username)}}" method="POST" class="card p-2 mx-auto" style="box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.2);"> 
+
+              <div class="form-group">
+                <center><label class="mx-auto">Change Profile Picture</label></center>
+                <div class="form-group relative">
+                  <input onchange="showPreviewOne(event);" name="ppic" type="file" class="form-control-file h-full absolute top-0 z-40">
+                  <div class="w-full h-56" style="overflow: hidden;">
+                    <img id="display" src="{{ image_file }}" alt="{{ profile }}" class="w-full z-10">
+                  </div>
+                  </div>
+                <p align="center" class="font-weight-lighter">Click on picture to Change</p>
+              </div>
+
+              <div class="form-group">
+                <center><label class="item-center">Change About</label></center>
+                <textarea name="about" class="form-control lead" rows="5">{{ about }}</textarea>
+              </div>
+
+              <button type="submit" class="btn btn-primary mb-2">Update</button>
+            
+            </form>
+          </div>
+        </div>
+     
+    
+
+  </div>
+
+  <script>
+    
+    function showPreviewOne(event){
+      if(event.target.files.length > 0){
+        let src = URL.createObjectURL(event.target.files[0]);
+        let preview = document.getElementById("display");
+        preview.src = src;
+        preview.style.display = "block";
+      } 
+    }
+    function myImgRemoveFunctionOne() {
+      document.getElementById("display").src = "https://i.ibb.co/ZVFsg37/default.png";
+    }
+
+  </script>
+{% endblock %}

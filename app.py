@@ -1,11 +1,11 @@
 import secrets
 import os
-from flask import Flask, render_template, redirect, url_for, flash
+from flask import Flask, render_template, redirect, url_for, flash, request
 from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
 from flask_security import Security, SQLAlchemyUserDatastore, UserMixin, RoleMixin
-from wtforms import StringField, PasswordField, BooleanField
+from wtforms import StringField, PasswordField, BooleanField, TextAreaField
 from wtforms.validators import InputRequired, Email, Length, EqualTo
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -34,6 +34,7 @@ login_manager.login_view = 'login'
 db = SQLAlchemy(app)
 
 
+
 roles_users = db.Table('roles_users',
     db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
     db.Column('role_id', db.Integer, db.ForeignKey('role.id'))
@@ -47,14 +48,15 @@ class User(UserMixin, db.Model):
     password = db.Column(db.String(80))
     admin = db.Column(db.Boolean, unique=False, default=True)
     profile_picture = db.Column(db.String(20), nullable=False, default='default.png')
+    about = db.Column(db.String(30), unique=False)
+    
     roles = db.relationship(
         'Role',
         secondary=roles_users,
         backref=db.backref('users', lazy='dynamic')
     )
-
     def __repr__(self):
-        return (self.username)
+        return (self.username)  
 
 
 
@@ -91,8 +93,8 @@ class RegisterForm(FlaskForm):
     profile_pic = FileField('profile picture', validators=[FileAllowed(['jpg','png'])])
 
 class UpdateAcountForm(FlaskForm):
-    email = StringField('email', validators=[InputRequired(), Email('Invalid Email')])
-    username = StringField('username', validators=[InputRequired(), Length(min=4,max=15)])
+    profile_pic = FileField(validators=[FileAllowed(['jpg','png'])])
+    about = TextAreaField(validators=[Length(max=150)])
 
 #Link for index page
 @app.route('/')
@@ -139,8 +141,10 @@ def signup():
             ppic = save_picture(form.profile_pic.data)
         else:
             ppic = 'default.png'
+            about = 'This is a about' 
+            
         hashed_password = generate_password_hash(form.password.data, method='sha256')
-        new_user = User(username=form.username.data, email=form.email.data, password=hashed_password, profile_picture=ppic)
+        new_user = User(username=form.username.data, email=form.email.data, password=hashed_password, profile_picture=ppic, about=about)
         exists = db.session.query(db.exists().where(User.username == form.username.data )).scalar()
         if (exists):
             return render_template('signup.html', form=form, msg='username already taken')
@@ -155,7 +159,33 @@ def signup():
 
 
 
-
+@app.route('/update/<string:idp>', methods=['GET', 'POST'])
+@login_required
+def update(idp):
+    if (idp == current_user.username):
+        if (request.method == 'POST'):
+            user = User.query.filter_by(username=idp).first()
+            if (request.files['ppic']):
+                ppic = save_picture(request.files['ppic'])
+            else:
+                ppic = current_user.profile_picture
+            
+            user.profile_picture = ppic
+            user.about = request.form['about']
+            try:
+                db.session.commit()
+                return redirect(url_for('dashboard', pro = current_user.username))
+            except:
+                return 'an error occured'
+        else:
+            user = User.query.filter_by(username=idp).first()
+            image_file = url_for('static',filename='profile_pics/'+user.profile_picture)
+            return render_template('update.html', idp=idp, msg='You are not an Admin!, \n Please Login', image_file = image_file, profile = str(current_user.username), about=current_user.about)
+ 
+    else:
+        form = LoginForm()
+        return render_template('login.html', form=form, msg='You are not an Admin!, \n Please Login')
+ 
 
 #Link to Dashboard
 @app.route('/profile/<string:pro>')
@@ -165,9 +195,9 @@ def dashboard(pro):
     if (user):
         image_file = url_for('static',filename='profile_pics/'+user.profile_picture)
         currentuser = User.query.filter_by(username=pro).one()
-        return render_template('profile.html', admin=current_user.admin, image_file = image_file, name = str(current_user.username), profile = str(currentuser))
+        return render_template('profile.html', admin=current_user.admin, image_file = image_file, name = str(current_user.username), profile = str(currentuser), about=current_user.about)
     else:
-        return render_template('profile.html', admin=current_user.admin, image_file = url_for('static',filename='profile_pics/default.png'), name = str(current_user.username), profile = 'user dosent exist')
+        return render_template('profile.html', admin=current_user.admin, image_file = url_for('static',filename='profile_pics/default.png'), name = str(current_user.username),about='This Profile Dosen\'t Exists' , profile = 'user dosent exist')
     
 
 #Link to Posts
