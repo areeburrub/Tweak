@@ -54,7 +54,8 @@
           <h1>{{ profile}}</h1>
           <p class="mx-1" >{{ about }}</p>
           {% if name == profile %}
-          <p><a href="{{ url_for('update',idp=current_user.username) }}"><button class="btn btn-secondary m-8">edit profile</button></a></p>
+          <p><a href="{{ url_for('update',idp=current_user.username) }}">
+            <button class="btn btn-secondary m-8">edit profile</button></a></p>
           {% endif %}
         </div>
       </div>

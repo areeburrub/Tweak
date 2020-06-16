@@ -14,6 +14,8 @@ from flask_admin import Admin
 import time
 from flask_admin import Admin, AdminIndexView
 from flask_admin.contrib.sqla import ModelView
+from resource import get_bucket, get_buckets_list
+from datetime import datetime
 
 
 app = Flask(__name__)
@@ -39,6 +41,15 @@ roles_users = db.Table('roles_users',
     db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
     db.Column('role_id', db.Integer, db.ForeignKey('role.id'))
 )
+
+
+class Posts(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    post_by = db.Column(db.String(15), nullable=False)
+    post_title = db.Column(db.String(80), nullable=False)
+    post_body = db.Column(db.String(25000), nullable=False)
+    post_created = db.Column(db.DateTime, default = datetime.utcnow)
+
 
 #USER Table
 class User(UserMixin, db.Model):
@@ -115,7 +126,6 @@ def login():
                 login_user(user, remember=form.remember.data)
                 return redirect(url_for('dashboard', pro = current_user.username))
         return render_template('login.html', form=form, msg='Wrong Username or Password')
-        #return '<H1>' + form.username.data + ' ' + form.password.data + '</H1>'
 
     return render_template('login.html', form=form)
 
@@ -125,10 +135,11 @@ def save_picture(form_picture):
     random_hex = secrets.token_hex(8)
     _, f_ext = os.path.splitext(form_picture.filename)
     picture_fn = random_hex + f_ext
-    picture_path = os.path.join(app.root_path, 'static/profile_pics', picture_fn)
-    form_picture.save(picture_path)
-
-    return picture_fn
+    #picture_path = os.path.join(app.root_path, 'static/profile_pics', picture_fn) #Local Image Path
+    my_bucket = get_bucket()
+    my_bucket.put_object(Key=picture_fn, Body=form_picture, ACL='public-read')
+    #form_picture.save(picture_path) #for local image save
+    return 'https://diyareeb.s3.us-east-2.amazonaws.com/' + picture_fn #for AWS IMAGE SAVE
 
 
 #Link to Singup Page
@@ -144,7 +155,7 @@ def signup():
             about = 'This is a about' 
             
         hashed_password = generate_password_hash(form.password.data, method='sha256')
-        new_user = User(username=form.username.data, email=form.email.data, password=hashed_password, profile_picture=ppic, about=about)
+        new_user = User(username=form.username.data, email=form.email.data, password=hashed_password, profile_picture=ppic)
         exists = db.session.query(db.exists().where(User.username == form.username.data )).scalar()
         if (exists):
             return render_template('signup.html', form=form, msg='username already taken')
@@ -153,8 +164,7 @@ def signup():
             db.session.commit()
         
         return render_template('login.html', form=form, msg='New account created')
-        #return '<H1>' + form.username.data + ' ' +form.email.data+' '+ form.password.data + '</H1>'
-
+        
     return render_template('signup.html', form=form)
 
 
@@ -180,7 +190,7 @@ def update(idp):
  
         else:
             user = User.query.filter_by(username=idp).first()
-            image_file = url_for('static',filename='profile_pics/'+user.profile_picture)
+            image_file = user.profile_picture
             return render_template('update.html', idp=idp, msg='You are not an Admin!, \n Please Login', image_file = image_file, profile = str(current_user.username), about=current_user.about)
  
     else:
@@ -194,7 +204,7 @@ def update(idp):
 def dashboard(pro):
     user = User.query.filter_by(username=pro).first()
     if (user):
-        image_file = url_for('static',filename='profile_pics/'+user.profile_picture)
+        image_file = user.profile_picture
         currentuser = User.query.filter_by(username=pro).one()
         return render_template('profile.html', admin=current_user.admin, image_file = image_file, name = str(current_user.username), profile = str(currentuser), about=current_user.about)
     else:
@@ -206,6 +216,11 @@ def dashboard(pro):
 @login_required
 def posts():
     return render_template('posts.html', name = current_user.username)
+
+@app.route('/posts/new')
+@login_required
+def addpost():
+    return render_template('add-post.html')
 
 
 
@@ -259,6 +274,7 @@ admin = Admin(app, index_view = MyAdminIndexView())
 
 admin.add_view(MyModelView(User, db.session))
 admin.add_view(MyModelView(Role, db.session))
+admin.add_view(MyModelView(Posts, db.session))
 
 if __name__ == '__main__':
     app.run()
