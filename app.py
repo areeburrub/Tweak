@@ -16,6 +16,8 @@ from flask_admin import Admin, AdminIndexView
 from flask_admin.contrib.sqla import ModelView
 from resource import get_bucket, get_buckets_list
 from datetime import datetime
+from config import AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_DEFAULT_REGION, S3_BUCKET_NAME
+
 
 
 app = Flask(__name__)
@@ -110,7 +112,7 @@ class UpdateAcountForm(FlaskForm):
 #Link for index page
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.html',Key=AWS_ACCESS_KEY_ID,Skey=AWS_SECRET_ACCESS_KEY ,B=S3_BUCKET_NAME,R=AWS_DEFAULT_REGION)
 
 
 
