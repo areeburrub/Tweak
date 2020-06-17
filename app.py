@@ -60,7 +60,7 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(50), unique=True)
     password = db.Column(db.String(80))
     admin = db.Column(db.Boolean, unique=False, default=True)
-    profile_picture = db.Column(db.String(20), nullable=False, default='default.png')
+    profile_picture = db.Column(db.String(70), nullable=False, default='default.png')
     about = db.Column(db.String(30), unique=False)
     
     roles = db.relationship(
