@@ -174,6 +174,7 @@ def signup():
 @app.route('/update/<string:idp>', methods=['GET', 'POST'])
 @login_required
 def update(idp):
+    form = LoginForm()
     if (idp == current_user.username):
         if (request.method == 'POST'):
             user = User.query.filter_by(username=idp).first()
@@ -193,10 +194,10 @@ def update(idp):
         else:
             user = User.query.filter_by(username=idp).first()
             image_file = user.profile_picture
-            return render_template('update.html', idp=idp, msg='You are not an Admin!, \n Please Login', image_file = image_file, profile = str(current_user.username), about=current_user.about)
+            return render_template('update.html', idp=idp, msg='You are not user of this account, \n Please Login', image_file = image_file, profile = str(current_user.username), about=current_user.about)
  
     else:
-        form = LoginForm()
+        
         return render_template('login.html', form=form, msg='You are not an Admin!, \n Please Login')
  
 
