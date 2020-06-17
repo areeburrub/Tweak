@@ -59,20 +59,25 @@
           {% endif %}
         </div>
       </div>
-      <div class="col-lg-3 m-1">
-        <div class="card h-100" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5);">
-          <div class="card-body">
-            <p class="card-title text-uppercase lead" style="overflow: hidden;  max-height: 15ch;">
-              <a href="#">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur</a>
-            </p>
-            <small class="card-subtitle mb-2 text-muted">by: Posted by</small>
-            <p class="card-text" style="overflow: hidden;  max-height: 14ch;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur</p>
-          </div>
-        </div>
-      </div>
+      
+        {% if posts|length < 1 %}
+            <h2>Nothing Posted Yet</h2>
+            {% else %}
+            {% for post in posts %}
+              <div class="col-lg-3 m-1">
+                <div class="card h-100" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5);">
+                  <div class="card-body">
+                    <p class="card-title text-uppercase lead" style="overflow: hidden;  max-height: 15ch;">
+                      <a href="#">{{ post.post_title }}</a>
+                    </p>
+                    <small class="card-subtitle mb-2 text-muted">by: {{ post.post_by }}</small>
+                    <p class="card-text" style="overflow: hidden;  max-height: 14ch;"> {{ post.post_body }} </p>
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+        {% endif %}
     </div>
-    
-
   </div>
 
 {% endblock %}

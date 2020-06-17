@@ -60,7 +60,7 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(50), unique=True)
     password = db.Column(db.String(80))
     admin = db.Column(db.Boolean, unique=False, default=True)
-    profile_picture = db.Column(db.String(70), nullable=False, default='default.png')
+    profile_picture = db.Column(db.String(70), nullable=False, default='url_for(\'static\',filename=\'default.png\')')
     about = db.Column(db.String(30), unique=False)
     
     roles = db.relationship(
@@ -153,7 +153,7 @@ def signup():
         if (form.profile_pic.data):
             ppic = save_picture(form.profile_pic.data)
         else:
-            ppic = 'default.png'
+            ppic = url_for('static',filename='profile_pics/default.png')
             about = 'This is a about' 
             
         hashed_password = generate_password_hash(form.password.data, method='sha256')
@@ -206,10 +206,11 @@ def update(idp):
 @login_required
 def dashboard(pro):
     user = User.query.filter_by(username=pro).first()
+    posts = Posts.query.filter_by(post_by=pro).order_by(Posts.post_created).all()
     if (user):
         image_file = user.profile_picture
         currentuser = User.query.filter_by(username=pro).one()
-        return render_template('profile.html', admin=current_user.admin, image_file = image_file, name = str(current_user.username), profile = str(currentuser), about=current_user.about)
+        return render_template('profile.html', posts=posts, admin=current_user.admin, image_file = image_file, name = str(current_user.username), profile = str(currentuser), about=current_user.about)
     else:
         return render_template('profile.html', admin=current_user.admin, image_file = url_for('static',filename='profile_pics/default.png'), name = str(current_user.username),about='This Profile Dosen\'t Exists' , profile = 'user dosent exist')
     
@@ -218,12 +219,20 @@ def dashboard(pro):
 @app.route('/posts')
 @login_required
 def posts():
-    return render_template('posts.html', name = current_user.username)
+    posts = Posts.query.order_by(Posts.post_created).all()
+    return render_template('posts.html', posts=posts, name = current_user.username)
 
-@app.route('/posts/new')
+@app.route('/posts/new', methods=['GET', 'POST'])
 @login_required
 def addpost():
-    return render_template('add-post.html')
+    if (request.method == 'POST'):
+        new_post = Posts(post_title = request.form['post_title'],post_by = current_user.username,post_body = request.form['post_body'])
+        db.session.add(new_post)
+        db.session.commit()
+        return redirect(url_for('dashboard', pro = current_user.username))
+        
+    else:
+        return render_template('add-post.html')
 
 
 
