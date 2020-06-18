@@ -18,10 +18,11 @@ from resource import get_bucket, get_buckets_list
 from datetime import datetime
 from config import AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_DEFAULT_REGION, S3_BUCKET_NAME
 from filters import datetimeformat
+from sqlalchemy import desc
 
 
 app = Flask(__name__)
-
+app.jinja_env.filters['datetimeformat'] = datetimeformat
 
 #config
 app.config.from_object(os.environ['APP_SETTING'])
@@ -207,20 +208,21 @@ def update(idp):
 @login_required
 def dashboard(pro):
     user = User.query.filter_by(username=pro).first()
-    posts = Posts.query.filter_by(post_by=pro).order_by(Posts.post_created).all()
+    posts = Posts.query.filter_by(post_by=pro).order_by(desc(Posts.post_created)).all()
+    Total = Posts.query.filter_by(post_by=pro).order_by(Posts.post_created).count()
     if (user):
         image_file = user.profile_picture
         currentuser = User.query.filter_by(username=pro).one()
-        return render_template('profile.html', posts=posts, admin=current_user.admin, image_file = image_file, name = str(current_user.username), profile = str(currentuser), about=current_user.about)
+        return render_template('profile.html',total=Total, posts=posts, admin=current_user.admin, image_file = image_file, name = str(current_user.username), profile = str(currentuser), about=current_user.about)
     else:
-        return render_template('profile.html', admin=current_user.admin, image_file = url_for('static',filename='profile_pics/default.png'), name = str(current_user.username),about='This Profile Dosen\'t Exists' , profile = 'user dosent exist')
+        return render_template('profile.html',total=Total, admin=current_user.admin, image_file = url_for('static',filename='profile_pics/default.png'), name = str(current_user.username),about='This Profile Dosen\'t Exists' , profile = 'user dosent exist')
     
 
 #Link to All Posts
 @app.route('/posts')
 @login_required
 def posts():
-    posts = Posts.query.order_by(Posts.post_created).all()
+    posts = Posts.query.order_by(desc(Posts.post_created)).all()
     
     return render_template('posts.html', posts=posts, name = current_user.username)
 

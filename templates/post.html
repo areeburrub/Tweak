@@ -31,7 +31,7 @@
                 <a>{{ post.post_title }}</a>
                 </p>
                 <p class="card-subtitle mb-2 text-uppercase">by:<a href="{{ url_for('dashboard',pro = post.post_by) }}">{{ post.post_by }}</a></p>
-                <p class="card-subtitle mb-2 text-uppercase">on: {{ post.post_created }}</p>
+                <p class="card-subtitle mb-2 text-uppercase">on: {{ post.post_created | datetimeformat }}</p>
                 <p class="card-text"> {{ post.post_body }} </p>
             </div>
             </div>

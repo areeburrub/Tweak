@@ -40,6 +40,7 @@
                     <a href="{{ url_for('post', postid=post.post_id) }}">{{ post.post_title }}</a>
                   </p>
                   <small class="card-subtitle mb-2 text-muted">by: {{ post.post_by }}</small>
+                  <p class="card-subtitle mb-2 text-muted">by: {{ post.post_created | datetimeformat }}</p>
                   <p class="card-text" style="overflow: hidden;  max-height: 14ch;"> {{ post.post_body }} </p>
                 </div>
               </div>
