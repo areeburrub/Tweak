@@ -17,7 +17,7 @@ from flask_admin.contrib.sqla import ModelView
 from resource import get_bucket, get_buckets_list
 from datetime import datetime
 from config import AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_DEFAULT_REGION, S3_BUCKET_NAME
-
+from filters import datetimeformat
 
 
 app = Flask(__name__)
@@ -47,6 +47,7 @@ roles_users = db.Table('roles_users',
 
 class Posts(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    post_id = db.Column(db.String(30), nullable=False)
     post_by = db.Column(db.String(15), nullable=False)
     post_title = db.Column(db.String(80), nullable=False)
     post_body = db.Column(db.String(25000), nullable=False)
@@ -61,7 +62,7 @@ class User(UserMixin, db.Model):
     password = db.Column(db.String(80))
     admin = db.Column(db.Boolean, unique=False, default=True)
     profile_picture = db.Column(db.String(70), nullable=False, default='url_for(\'static\',filename=\'default.png\')')
-    about = db.Column(db.String(30), unique=False)
+    about = db.Column(db.String(120), unique=False)
     
     roles = db.relationship(
         'Role',
@@ -112,7 +113,7 @@ class UpdateAcountForm(FlaskForm):
 #Link for index page
 @app.route('/')
 def index():
-    return render_template('index.html',Key=AWS_ACCESS_KEY_ID,Skey=AWS_SECRET_ACCESS_KEY ,B=S3_BUCKET_NAME,R=AWS_DEFAULT_REGION)
+    return render_template('index.html')
 
 
 
@@ -215,18 +216,20 @@ def dashboard(pro):
         return render_template('profile.html', admin=current_user.admin, image_file = url_for('static',filename='profile_pics/default.png'), name = str(current_user.username),about='This Profile Dosen\'t Exists' , profile = 'user dosent exist')
     
 
-#Link to Posts
+#Link to All Posts
 @app.route('/posts')
 @login_required
 def posts():
     posts = Posts.query.order_by(Posts.post_created).all()
+    
     return render_template('posts.html', posts=posts, name = current_user.username)
 
 @app.route('/posts/new', methods=['GET', 'POST'])
 @login_required
 def addpost():
     if (request.method == 'POST'):
-        new_post = Posts(post_title = request.form['post_title'],post_by = current_user.username,post_body = request.form['post_body'])
+        post_id = secrets.token_urlsafe(8)
+        new_post = Posts(post_id = post_id ,post_title = request.form['post_title'],post_by = current_user.username,post_body = request.form['post_body'])
         db.session.add(new_post)
         db.session.commit()
         return redirect(url_for('dashboard', pro = current_user.username))
@@ -234,7 +237,12 @@ def addpost():
     else:
         return render_template('add-post.html')
 
-
+#Link to Posts
+@app.route('/posts/<string:postid>')
+@login_required
+def post(postid):
+    post = Posts.query.filter_by(post_id=postid).first()
+    return render_template('post.html', post=post, name = current_user.username)
 
 
 #Link to Logout

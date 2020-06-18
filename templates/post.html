@@ -4,10 +4,6 @@
 <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
 
 <style>
-.card:hover{
-  transition: transform .2s; /* Animation */
-  transform: scale(1.02);
-}
 </style>
 {% endblock %}
 
@@ -27,27 +23,19 @@
     <div class="col-lg-10 p-0 m-0">
       <div class="container">
         <div class="row">
-
-          {% if posts|length < 1 %}
-            <h2>Nothing Posted Yet</h2>
-            {% else %}
-            {% for post in posts %}
-            <div class="col-lg-3 mt-3">
-              <div class="card h-100 m-2 mb-3 mt-3" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5); ">
-                <div class="card-body" style="position:relative;">
-                  
-                  <p class="card-title text-uppercase lead" style="overflow: hidden; position: relative; height: 30%;  max-height: 15ch;">
-                    <a href="{{ url_for('post', postid=post.post_id) }}">{{ post.post_title }}</a>
-                  </p>
-                  <small class="card-subtitle mb-2 text-muted">by: {{ post.post_by }}</small>
-                  <p class="card-text" style="overflow: hidden;  max-height: 14ch;"> {{ post.post_body }} </p>
-                </div>
-              </div>
+        <div class="col-lg-12 mt-3">
+            <div class="card m-2 mb-3 mt-3" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5); ">
+            <div class="card-body text-center" style="position:relative;">
+                
+                <p class="card-title text-uppercase lead text-blue-400" style="position: relative; ">
+                <a>{{ post.post_title }}</a>
+                </p>
+                <p class="card-subtitle mb-2 text-uppercase">by:<a href="{{ url_for('dashboard',pro = post.post_by) }}">{{ post.post_by }}</a></p>
+                <p class="card-subtitle mb-2 text-uppercase">on: {{ post.post_created }}</p>
+                <p class="card-text"> {{ post.post_body }} </p>
             </div>
-            {% endfor %}
-          {% endif %}
-
-          
+            </div>
+        </div>          
           <div class="col-lg-6 mt-5">
             <div class="card h-full d-md-block d-lg-none" style="background: linear-gradient(#25bbcf,#45cbdd,#60d0dfe3); box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5);">
               <div class="card-body">
