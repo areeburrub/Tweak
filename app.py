@@ -246,13 +246,11 @@ def dashboard(pro):
 
 #Link to All Posts
 @app.route('/posts')
-@login_required
 def posts():
     posts = Posts.query.order_by(desc(Posts.post_created)).all()
     
     return render_template('posts.html',
-                            posts=posts,
-                            name = current_user.username
+                            posts=posts
                             )
 
 @app.route('/post/delete/<string:postid>', methods=['GET', 'POST'])

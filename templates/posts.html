@@ -1,6 +1,28 @@
 {% extends "base.html" %}
 
 {% block head %}
+<title>All Posts - Tweak</title>
+<!-- HTML Meta Tags -->
+<meta name="description" content="Checkout what your friend posted on Tweak, one of the latest Social Website. JOIN NOW">
+
+<!-- Google / Search Engine Tags -->
+<meta itemprop="name" content=" Home - Tweak || A Social Blogging Website">
+<meta itemprop="description" content="Checkout what your friend posted on Tweak, one of the latest Social Website. JOIN NOW">
+<meta itemprop="image" content="https://img.indiefolio.com/fit-in/1100x0/filters:format(webp):fill(transparent)/project/body/41c8e915b04118cce7b41455f3a8c7f7.jpg">
+
+<!-- Facebook Meta Tags -->
+<meta property="og:url" content="https://img.indiefolio.com/fit-in/1100x0/filters:format(webp):fill(transparent)/project/body/41c8e915b04118cce7b41455f3a8c7f7.jpg">
+<meta property="og:type" content="website">
+<meta property="og:title" content=" Home - Tweak || A Social Blogging Website">
+<meta property="og:description" content="Checkout what your friend posted on Tweak, one of the latest Social Website. JOIN NOW">
+<meta property="og:image" content="https://img.indiefolio.com/fit-in/1100x0/filters:format(webp):fill(transparent)/project/body/41c8e915b04118cce7b41455f3a8c7f7.jpg">
+
+<!-- Twitter Meta Tags -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content=" Home - Tweak || A Social Blogging Website">
+<meta name="twitter:description" content="Checkout what your friend posted on Tweak, one of the latest Social Website. JOIN NOW">
+<meta name="twitter:image" content="https://img.indiefolio.com/fit-in/1100x0/filters:format(webp):fill(transparent)/project/body/41c8e915b04118cce7b41455f3a8c7f7.jpg">
+
 <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
 
 <style>
@@ -32,7 +54,7 @@
             <h2>Nothing Posted Yet</h2>
             {% else %}
             {% for post in posts %}
-            <div class="col-lg-3 mt-3">
+            <div class="col-lg-3 m-3">
               <a href="{{ url_for('post', postid=post.post_id) }}">
                 <div class="card h-100 m-2 mb-3 mt-3" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5); ">
                   <div class="card-body" style="position:relative;">
