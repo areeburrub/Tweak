@@ -41,11 +41,11 @@
                       {{ post.post_title }}
                     </p>
                     <small class="card-subtitle mb-2 text-muted">by: {{ post.post_by }}</small>
-                    <p class="card-subtitle mb-2 text-muted">by: {{ post.post_created | datetimeformat }}</p>
-                    <div class="card-text" style="overflow: hidden;  max-height: 14ch;"> {{ post.post_body | safe }} </div>
+                    <p class="card-subtitle mb-2 text-muted">{{ post.post_created | datetimeformat }}</p>
+                    <div class="card-text" style="overflow: hidden; height: 100px;"> {{ post.post_body | safe }} </div>
                   </div>
                 </div>
-               </a>
+              </a>
             </div>
             {% endfor %}
           {% endif %}
@@ -63,22 +63,10 @@
             </div>
           </div>
         </div>
-        
 
       </div>
     </div>
     
-    <div class="col-lg-2 p-0">
-      <div class="card h-full w-full d-lg-block d-md-none d-none" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5);">
-        <div class="card-body">
-          <p class="card-title text-uppercase lead" style="overflow: hidden;  max-height: 15ch;">
-            <a href="#">Site Suggestions</a>
-          </p>
-          <small class="card-subtitle mb-2 text-muted">by: Site itself</small>
-          <p class="card-text" style="overflow: hidden;  max-height: 14ch;">Suggestions wager aur kush nhi</p>
-        </div>
-      </div>
-    </div>
   </div>
 </div>
 

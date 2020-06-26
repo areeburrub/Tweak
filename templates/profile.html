@@ -124,7 +124,7 @@
                       <p class="card-title text-uppercase lead" style="overflow: hidden; position: relative; height: 30%;  max-height: 15ch;">
                         {{ post.post_title }}
                       </p>
-                      <small class="card-subtitle mb-2 text-muted">by: {{ post.post_by }}</small>
+                      <small class="card-subtitle mb-2 text-muted">{{ post.post_by }}</small>
                       <p class="card-subtitle mb-2 text-muted">on: {{ post.post_created | datetimeformat }}</p>
                       <div class="card-text" style="overflow: hidden;  max-height: 14ch;"> {{ post.post_body | safe }} </div>
                     </div>

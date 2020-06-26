@@ -4,6 +4,9 @@
 <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
 
 <style>
+  card-text::-webkit-scrollbar {
+  width: 5px;
+}
 </style>
 {% endblock %}
 
@@ -32,7 +35,7 @@
                   </p>
                   <p class="card-subtitle mb-2 text-uppercase">by:<a href="{{ url_for('dashboard',pro = post.post_by) }}">{{ post.post_by }}</a></p>
                   <p class="card-subtitle mb-2 text-uppercase">on: {{ post.post_created | datetimeformat }}</p>
-                  <p class="card-text"> {{ post.post_body | safe }} </p>
+                  <p class="card-text" style="overflow: scroll; width:100%; height: auto; "> {{ post.post_body | safe }} </p>
                   {% if name == profile %}
                   <div class="row mt-5">
                   <div class="col-md-3"></div>
