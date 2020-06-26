@@ -79,22 +79,20 @@
     
     <div class="col-lg-2 p-0">
       
-      <a href="{{ url_for('signup') }}">
-        <div class="card h-full w-full d-lg-block d-md-none d-none" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5); overflow: hidden;  height:500px; background: linear-gradient(60deg,#25bbcf 0%,#45cbdd 55%,#60d0dfe3 100%);position: absolute; right: 20px; top:20px;">
-          <div class="card-body">
-            <p class="card-title text-uppercase lead" >
-              <a>What are you wating for</a>
-            </p>
-            <p class="card-text" style="overflow: hidden;  max-height: 14ch;">Tweak Your post Today</p>
-            
-            <div class="row">
-              <div class="col-md-6">
+        <div class="card h-full w-full d-lg-block d-md-none d-none" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5); overflow: hidden;  height:300px; background: linear-gradient(60deg,#25bbcf 0%,#45cbdd 55%,#60d0dfe3 100%);position: fixed; right: 12px; top:18px;">
+          <a href="{{ url_for('signup') }}">
+            <div class="card-body">
+              <p class="card-title text-uppercase lead" >
+                What are you wating for
+              </p>
+              <p class="card-text" style="overflow: hidden;  max-height: 14ch;">Tweak Your post Today</p>
+                <a href="{{ url_for('signup') }}">
                   <button type="submit" class="btn btn-info w-full">Register Now</button>
-                </div>
+                </a>
+              </div>
             </div>
-          </div>
+          </a>
         </div>
-      </a>
     </div>
   </div>
 </div>
