@@ -109,31 +109,30 @@
       </div>
 
     <div class="row mt-8">
-            <div class="col-lg-12 text-center">
-              <h1>All Posts</h1></div>
-              {% if posts|length < 1 %}
-              <h2 class="text-center">Nothing Posted Yet</h2>
-            
-            {% else %}
-            {% for post in posts %}
-              <div class="col-lg-3 mt-3">
-                <a href="{{ url_for('post', postid=post.post_id) }}">
-                  <div class="card h-100 m-2 mb-3 mt-3" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5); ">
-                    <div class="card-body" style="position:relative;">
-                      
-                      <p class="card-title text-uppercase lead" style="overflow: hidden; position: relative; height: 30%;  max-height: 15ch;">
-                        {{ post.post_title }}
-                      </p>
-                      <small class="card-subtitle mb-2 text-muted">{{ post.post_by }}</small>
-                      <p class="card-subtitle mb-2 text-muted">on: {{ post.post_created | datetimeformat }}</p>
-                      <div class="card-text" style="overflow: hidden;  max-height: 14ch;"> {{ post.post_body | safe }} </div>
+              <div class="col-lg-12 text-center">
+                <h1>All Posts</h1>
+                {% if posts|length < 1 %}
+                <h2 class="text-center">Nothing Posted Yet</h2>
+                {% else %}
+                {% for post in posts %}
+                <div class="col-lg-3 mt-3">
+                  <a href="{{ url_for('post', postid=post.post_id) }}">
+                    <div class="card h-100 m-2 mb-3 mt-3" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5); ">
+                      <div class="card-body" style="position:relative;">
+                        
+                        <p class="card-title text-uppercase lead" style="overflow: hidden; position: relative; height: 30%;  max-height: 15ch;">
+                          {{ post.post_title }}
+                        </p>
+                        <small class="card-subtitle mb-2 text-muted">{{ post.post_by }}</small>
+                        <p class="card-subtitle mb-2 text-muted">on: {{ post.post_created | datetimeformat }}</p>
+                        <div class="card-text" style="overflow: hidden;  max-height: 14ch;"> {{ post.post_body | safe }} </div>
+                      </div>
                     </div>
-                  </div>
-                </a>
+                  </a>
+                </div>
+                {% endfor %}
+                {% endif %}
               </div>
-            {% endfor %}
-        {% endif %}
-                 
         <div class="col-lg-6 mt-5">
           <div class="card h-full d-md-block d-lg-none" style="background: linear-gradient(#25bbcf,#45cbdd,#60d0dfe3); box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5);">
             <div class="card-body">
