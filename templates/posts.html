@@ -33,17 +33,19 @@
             {% else %}
             {% for post in posts %}
             <div class="col-lg-3 mt-3">
-              <div class="card h-100 m-2 mb-3 mt-3" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5); ">
-                <div class="card-body" style="position:relative;">
-                  
-                  <p class="card-title text-uppercase lead" style="overflow: hidden; position: relative; height: 30%;  max-height: 15ch;">
-                    <a href="{{ url_for('post', postid=post.post_id) }}">{{ post.post_title }}</a>
-                  </p>
-                  <small class="card-subtitle mb-2 text-muted">by: {{ post.post_by }}</small>
-                  <p class="card-subtitle mb-2 text-muted">by: {{ post.post_created | datetimeformat }}</p>
-                  <p class="card-text" style="overflow: hidden;  max-height: 14ch;"> {{ post.post_body }} </p>
+              <a href="{{ url_for('post', postid=post.post_id) }}">
+                <div class="card h-100 m-2 mb-3 mt-3" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5); ">
+                  <div class="card-body" style="position:relative;">
+                    
+                    <p class="card-title text-uppercase lead" style="overflow: hidden; position: relative; height: 30%;  max-height: 15ch;">
+                      {{ post.post_title }}
+                    </p>
+                    <small class="card-subtitle mb-2 text-muted">by: {{ post.post_by }}</small>
+                    <p class="card-subtitle mb-2 text-muted">by: {{ post.post_created | datetimeformat }}</p>
+                    <p class="card-text" style="overflow: hidden;  max-height: 14ch;"> {{ post.post_body }} </p>
+                  </div>
                 </div>
-              </div>
+               </a>
             </div>
             {% endfor %}
           {% endif %}

@@ -1,6 +1,6 @@
 import secrets
 import os
-from flask import Flask, render_template, redirect, url_for, flash, request
+from flask import Flask, render_template, redirect, url_for, flash, request,jsonify
 from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
@@ -19,7 +19,8 @@ from datetime import datetime
 from config import AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_DEFAULT_REGION, S3_BUCKET_NAME
 from filters import datetimeformat
 from sqlalchemy import desc
-
+from sqlalchemy.sql import text
+from flask_marshmallow import Marshmallow
 
 app = Flask(__name__)
 app.jinja_env.filters['datetimeformat'] = datetimeformat
@@ -37,22 +38,27 @@ login_manager.login_view = 'login'
 
 #DataBase initalized
 db = SQLAlchemy(app)
+ma = Marshmallow(app)
 
 
 
-roles_users = db.Table('roles_users',
-    db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
-    db.Column('role_id', db.Integer, db.ForeignKey('role.id'))
-)
-
-
-class Posts(db.Model):
+class Posts(db.Model): 
     id = db.Column(db.Integer, primary_key=True)
     post_id = db.Column(db.String(30), nullable=False)
     post_by = db.Column(db.String(15), nullable=False)
     post_title = db.Column(db.String(80), nullable=False)
     post_body = db.Column(db.String(25000), nullable=False)
     post_created = db.Column(db.DateTime, default = datetime.utcnow)
+
+#The Marshmallow Schema
+class PostSchema(ma.SQLAlchemySchema):
+    class Meta:
+        model = Posts
+    id = ma.auto_field()
+    post_title = ma.auto_field()
+    post_body = ma.auto_field()
+    post_id = ma.auto_field()
+    post_created = ma.auto_field()
 
 
 #USER Table
@@ -61,36 +67,28 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(15), unique=True)
     email = db.Column(db.String(50), unique=True)
     password = db.Column(db.String(80))
-    admin = db.Column(db.Boolean, unique=False, default=True)
+    admin = db.Column(db.Boolean, unique=False, default=False)
     profile_picture = db.Column(db.String(70), nullable=False, default='url_for(\'static\',filename=\'default.png\')')
     about = db.Column(db.String(120), unique=False)
-    
-    roles = db.relationship(
-        'Role',
-        secondary=roles_users,
-        backref=db.backref('users', lazy='dynamic')
-    )
+
     def __repr__(self):
         return (self.username)  
+    
 
-
-
-#Roles Table
-class Role(RoleMixin, db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(40))
-
-    def __repr__(self):
-        return (self.name)
-
-
-
-
+#The Marshmallow Schema
+class UserSchema(ma.SQLAlchemySchema):
+    class Meta:
+        model = User
+    id = ma.auto_field()
+    username = ma.auto_field()
+    about = ma.auto_field()
+    
 
 #Login Manager Loader
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
+
 
 #Login Form WT FORM
 class LoginForm(FlaskForm):
@@ -111,27 +109,6 @@ class UpdateAcountForm(FlaskForm):
     profile_pic = FileField(validators=[FileAllowed(['jpg','png'])])
     about = TextAreaField(validators=[Length(max=150)])
 
-#Link for index page
-@app.route('/')
-def index():
-    return render_template('index.html')
-
-
-
-#link for login page
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    
-    form = LoginForm()
-    if form.validate_on_submit():
-        user = User.query.filter_by(username=form.username.data).first()
-        if user:
-            if check_password_hash(user.password, form.password.data):
-                login_user(user, remember=form.remember.data)
-                return redirect(url_for('dashboard', pro = current_user.username))
-        return render_template('login.html', form=form, msg='Wrong Username or Password')
-
-    return render_template('login.html', form=form)
 
 
 #Save Profile Pictures
@@ -144,6 +121,30 @@ def save_picture(form_picture):
     my_bucket.put_object(Key=picture_fn, Body=form_picture, ACL='public-read')
     #form_picture.save(picture_path) #for local image save
     return 'https://diyareeb.s3.us-east-2.amazonaws.com/' + picture_fn #for AWS IMAGE SAVE
+
+
+#Link for index page
+@app.route('/')
+def index():
+    if (current_user.is_anonymous == False):
+        return redirect(url_for('dashboard', pro = current_user.username))
+    else:
+        return render_template('index.html')
+
+
+
+#link for login page
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    form = LoginForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(username=form.username.data).first()
+        if user:
+            if check_password_hash(user.password, form.password.data):
+                login_user(user, remember=form.remember.data)
+                return redirect(url_for('dashboard', pro = current_user.username))
+        return redirect(url_for('login.html', form=form, msg='Wrong Username or Password'))
+    return render_template('login.html', form=form)
 
 
 #Link to Singup Page
@@ -201,7 +202,16 @@ def update(idp):
     else:
         
         return render_template('login.html', form=form, msg='You are not an Admin!, \n Please Login')
- 
+
+
+@app.route('/profile/')
+@login_required
+def profile_login_check():
+    if (current_user.is_anonymous == False):
+
+        return redirect(url_for('login', msg = "Please Login to Continue"))
+
+
 
 #Link to Dashboard
 @app.route('/profile/<string:pro>')
@@ -210,12 +220,28 @@ def dashboard(pro):
     user = User.query.filter_by(username=pro).first()
     posts = Posts.query.filter_by(post_by=pro).order_by(desc(Posts.post_created)).all()
     Total = Posts.query.filter_by(post_by=pro).order_by(Posts.post_created).count()
+
     if (user):
         image_file = user.profile_picture
         currentuser = User.query.filter_by(username=pro).one()
-        return render_template('profile.html',total=Total, posts=posts, admin=current_user.admin, image_file = image_file, name = str(current_user.username), profile = str(currentuser), about=current_user.about)
+        return render_template('profile.html',
+                                total=Total,
+                                posts=posts,
+                                admin=current_user.admin,
+                                image_file = image_file,
+                                name = str(current_user.username),
+                                profile = str(currentuser),
+                                about=user.about
+                                )
     else:
-        return render_template('profile.html',total=Total, admin=current_user.admin, image_file = url_for('static',filename='profile_pics/default.png'), name = str(current_user.username),about='This Profile Dosen\'t Exists' , profile = 'user dosent exist')
+        return render_template('profile.html',
+                                total=Total,
+                                admin=current_user.admin,
+                                image_file = url_for('static',filename='profile_pics/default.png'),
+                                name = str(current_user.username),
+                                about='This Profile Dosen\'t Exists',
+                                profile = 'user dosen\'t exist'
+                                )
     
 
 #Link to All Posts
@@ -224,7 +250,44 @@ def dashboard(pro):
 def posts():
     posts = Posts.query.order_by(desc(Posts.post_created)).all()
     
-    return render_template('posts.html', posts=posts, name = current_user.username)
+    return render_template('posts.html',
+                            posts=posts,
+                            name = current_user.username
+                            )
+
+@app.route('/post/delete/<string:postid>', methods=['GET', 'POST'])
+@login_required
+def delete(postid):
+    post = Posts.query.filter_by(post_id=postid).first()
+    if(post.post_by == current_user.username):
+        try:
+            db.session.delete(post)
+            db.session.commit()
+            return redirect(url_for('dashboard', pro = current_user.username))
+        except:
+            return 'An error Occured'
+    else:
+        return redirect(url_for('dashboard', pro = current_user.username))
+
+
+@app.route('/post/update/<string:postid>', methods=['GET', 'POST'])
+@login_required
+def updatepost(postid):
+    post = Posts.query.filter_by(post_id=postid).first()
+    name = post.post_by
+    if (request.method == 'POST'):
+        post.post_title = request.form['post_title']
+        post.post_body = request.form['post_body']
+    
+        try:
+            db.session.commit()
+            return redirect(url_for('dashboard', pro = current_user.username))
+        except:
+            return redirect(url_for('dashboard', pro = current_user.username))
+        
+    else:
+        return render_template('update-post.html', post=post, name=name , profile = current_user.username)
+
 
 @app.route('/posts/new', methods=['GET', 'POST'])
 @login_required
@@ -240,11 +303,12 @@ def addpost():
         return render_template('add-post.html')
 
 #Link to Posts
-@app.route('/posts/<string:postid>')
+@app.route('/post/<string:postid>')
 @login_required
 def post(postid):
     post = Posts.query.filter_by(post_id=postid).first()
-    return render_template('post.html', post=post, name = current_user.username)
+    name = post.post_by
+    return render_template('post.html', post=post,name=name, profile = current_user.username)
 
 
 #Link to Logout
@@ -254,9 +318,33 @@ def logout():
     logout_user()
     return redirect(url_for('index'))
 
+
+@app.route('/livebox', methods=['GET', 'POST'])
+def livebox():    
+    if (request.method == 'POST'):
+        tag = request.form.get("text")
+        search = "%{}%".format(tag)
+        P_results = Posts.query.filter(Posts.post_body.like(search)).all()
+        U_results = User.query.filter(User.username.like(search)).all()
+        post_schema = PostSchema(many=True)
+        user_schema = UserSchema(many=True)
+        post_result = post_schema.dump(P_results)
+        user_result = user_schema.dump(U_results)
+        return jsonify({'post':post_result,'user':user_result})
+
+@app.route('/search', methods=['GET', 'POST'])
+def search():
+    if (request.method == 'POST'):
+        tag = request.form['search']
+        search = "%{}%".format(tag)
+        P_results = Posts.query.filter(Posts.post_body.like(search)).all()
+        U_results = User.query.filter(User.username.like(search)).all()
+        return render_template('search.html',posts=P_results,users=U_results)
+
+        
+
+
 #adding database view on admin page
-
-
 ################################# ADMIN CODE ####################################
 class MyAdminIndexView(AdminIndexView):
     def is_accessible(self):
@@ -295,7 +383,6 @@ admin = Admin(app, index_view = MyAdminIndexView())
 ################################################################################################
 
 admin.add_view(MyModelView(User, db.session))
-admin.add_view(MyModelView(Role, db.session))
 admin.add_view(MyModelView(Posts, db.session))
 
 if __name__ == '__main__':

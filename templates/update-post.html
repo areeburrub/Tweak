@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block head %}
+
+<!-- Profile Card CSS Starts -->
+<style type="text/css">
+.card-profile {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  max-width: 75%;
+  text-align: center;
+}
+
+
+.button-update {
+  border: none;
+  outline: 0;
+  display: inline-block;
+  padding: 8px;
+  color: white;
+  background-color: #000;
+  text-align: center;
+  cursor: pointer;
+  width: 100%;
+  font-size: 18px;
+}
+
+
+.button-update:hover, a:hover {
+  opacity: 0.7;
+}
+</style>
+<!-- Profile Card CSS Ends -->
+{% endblock %}
+
+{% block nav %}
+<li>
+<a href="{{ url_for('logout') }}">
+  <button type="button" class="btn btn-secondary d-flex nav-item">Logout</button>
+</a>
+</li>
+{% endblock %}
+
+{% block body %}
+  <!-- Page Content -->
+  
+  {% if name == profile %}
+  <div class="container mt-16 mb-24">  
+    <div class="row">
+      <div class="col-lg-9 mx-auto">
+        <form role="form" id="post-form" class="post-form p-2" enctype="multipart/form-data" action="{{ url_for('updatepost',postid=post.post_id)}}" method="POST" class="card p-2 mx-auto" style="box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.2);">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                      <input name="post_title" type="text" class="form-control" id="post_title" placeholder="Add Title" value="{{post.post_title}}">
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                    <textarea name="post_body" class="form-control textarea" rows="10" id="post_body" placeholder="Add Content">{{ post.post_body }}</textarea>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-3"></div>
+              <div class="col-md-6">
+                <button type="submit" class="btn btn-primary w-full">Update my Post</button>
+              </div>
+              <div class="col-md-3"></div>
+          </div>
+        </form>
+        <form role="form" id="post-form" class="post-form p-2" enctype="multipart/form-data" action="{{ url_for('delete',postid=post.post_id)}}" method="POST" class="card p-2 mx-auto" style="box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.2);">
+          
+          <div class="row">
+            <div class="col-md-3"></div>
+            <div class="col-md-6">
+              <button type="submit" class="btn btn-danger w-full">DELETE my Post</button>
+            </div>
+            <div class="col-md-3"></div>
+        </div>
+        </form>
+      </div>
+    </div>
+
+  </div>
+  {% else %}
+  <h1>Login to Your Profile To edit this post</h1>
+  {% endif %}
+{% endblock %}
+ 
