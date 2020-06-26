@@ -24,11 +24,11 @@
   <meta name="twitter:title" content=" Login - Tweak || A Social Blogging Website">
   <meta name="twitter:description" content="In this busy world give some moment to your thoughts and write something inspiring">
   <meta name="twitter:image" content="https://tweak-web.herokuapp.com/static/profile_pics/default.png">
-{% endblock %}
 
-{% block styles %}
-{{super()}}
-<link rel="stylesheet" href="{{url_for('static', filename='signin.css')}}">
+
+  {{super()}}
+  <link rel="stylesheet" href="{{url_for('static', filename='signin.css')}}">
+
 {% endblock %}
 
 {% block content %}
