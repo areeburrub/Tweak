@@ -42,7 +42,7 @@
                     </p>
                     <small class="card-subtitle mb-2 text-muted">by: {{ post.post_by }}</small>
                     <p class="card-subtitle mb-2 text-muted">by: {{ post.post_created | datetimeformat }}</p>
-                    <p class="card-text" style="overflow: hidden;  max-height: 14ch;"> {{ post.post_body }} </p>
+                    <p class="card-text" style="overflow: hidden;  max-height: 14ch;"> {{ post.post_body | safe }} </p>
                   </div>
                 </div>
                </a>

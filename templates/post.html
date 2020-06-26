@@ -32,7 +32,7 @@
                   </p>
                   <p class="card-subtitle mb-2 text-uppercase">by:<a href="{{ url_for('dashboard',pro = post.post_by) }}">{{ post.post_by }}</a></p>
                   <p class="card-subtitle mb-2 text-uppercase">on: {{ post.post_created | datetimeformat }}</p>
-                  <p class="card-text"> {{ post.post_body }} </p>
+                  <p class="card-text"> {{ post.post_body | safe }} </p>
                   {% if name == profile %}
                   <div class="row mt-5">
                   <div class="col-md-3"></div>
@@ -52,10 +52,19 @@
             <div class="card h-full d-md-block d-lg-none" style="background: linear-gradient(#25bbcf,#45cbdd,#60d0dfe3); box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5);">
               <div class="card-body">
                 <p class="card-title text-uppercase lead" style="overflow: hidden;  max-height: 15ch;">
-                  <a href="#">Site Suggestions</a>
+                  <a href="#">What are you wating for</a>
                 </p>
-                <small class="card-subtitle mb-2 text-muted">by: Site itself</small>
-                <p class="card-text" style="overflow: hidden;  max-height: 14ch;">Suggestions wager aur kush nhi</p>
+                <p class="card-text" style="overflow: hidden;  max-height: 14ch;">Tweak Your post Today</p>
+                
+                <div class="row">
+                  <div class="col-md-3"></div>
+                  <div class="col-md-6">
+                    <a href="{{ url_for('signup') }}">
+                      <button type="submit" class="btn btn-info w-full">Register Now</button>
+                    </a>
+                    </div>
+                  <div class="col-md-3"></div>
+                </div>
               </div>
             </div>
           </div>
@@ -69,10 +78,19 @@
       <div class="card h-full w-full d-lg-block d-md-none d-none" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5);">
         <div class="card-body">
           <p class="card-title text-uppercase lead" style="overflow: hidden;  max-height: 15ch;">
-            <a href="#">Site Suggestions</a>
+            <a href="#">What are you wating for</a>
           </p>
-          <small class="card-subtitle mb-2 text-muted">by: Site itself</small>
-          <p class="card-text" style="overflow: hidden;  max-height: 14ch;">Suggestions wager aur kush nhi</p>
+          <p class="card-text" style="overflow: hidden;  max-height: 14ch;">Tweak Your post Today</p>
+          
+          <div class="row">
+            <div class="col-md-3"></div>
+            <div class="col-md-6">
+              <a href="{{ url_for('signup') }}">
+                <button type="submit" class="btn btn-info w-full">Register Now</button>
+              </a>
+              </div>
+            <div class="col-md-3"></div>
+          </div>
         </div>
       </div>
     </div>
