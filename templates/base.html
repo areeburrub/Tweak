@@ -2,23 +2,111 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     
+    <script>
+
+        $(document).ready(function(){
+          
+          $(".search-container").hide();
+
+          $("#livebox").focus(function(){
+            $(".search-container").fadeIn(700);
+          });
+          
+          $("#livebox").blur(function(){
+            $(".search-container").fadeOut(700);
+          });
+          
+          $(".preloader-wrapper").hide();
+
+        });
+
+    </script>
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    
     <style>
      a, a:hover, a:focus, a:active {
         text-decoration: none;
         color: inherit;
         }
-    </style>
+        /* Extra small devices (phones, 600px and down) */
+        @media only screen and (max-width: 991px) { 
+          .search-container{
+            width:100%;
+            height:30vh;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+            background:black;
+            position: fixed;
+            top: 250px;
+            z-index: 10;
+          }
+          
+          .search-row{
+            margin:20px;
+            border-bottom-right-radius:40px;
+            border-bottom-left-radius:40px;
+            height:36vh;
+            background:white;
+          }
+              
+          #datalist{
+            overflow: scroll;
+            height:36vh;
+            margin: 10px;
+          }
+        }
+        </style>
+        <style>
+        /* Small devices (portrait tablets and large phones, 600px and up) */
+        @media only screen and (min-width: 992px) {
+          .search-container{
+            position: fixed;
+            top: 50px;
+            width:100%;
+            height:70vh;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+            background:linear-gradient(45deg,#7b8da0,#536577,#597692);
+            z-index: 10;
+          
+          }
+          .search-row{
+            margin:20px;
+            border-bottom-right-radius:40px;
+            border-bottom-left-radius:40px;
+            height:66vh;
+            width:100;
+            background:linear-gradient(45deg,#b0cceb,#88a8c9,#8fbfec);
+            padding-bottom: 10px;
+          }
+              
+          #datalist{
+            overflow: scroll;
+            height:66vh;
+            margin: 10px;
+          }
+        }
 
+        .preloader-wrapper{
+          background:black;
+          position: fixed;
+          top:0;
+          left:0;
+          width:500px;
+          height:500px;
+        }
+    </style>
+    
     {% block head %}
     
     {% endblock %}
 </head>
 <body>
-
 
  <!-- Navigation -->
  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
@@ -37,14 +125,13 @@
 
         </div>
         <form class="form" action="/search" method="POST">
-        <div class="input-group">
-          
-              <input type="text" name="search" id="livebox" class="form-control col-lg-6" placeholder="Search Here !!!">
-              <div class="input-group-append">
+          <div class="input-group">
+            <input type="text" name="search" autocomplete="off" id="livebox" class="form-control col-lg-6" placeholder="Search Here !!!">
+            <div class="input-group-append">
               <button class="btn btn-outline-secondary" type="submit">Search</button>
-              </div>
-        </div>
-      </form>
+            </div>
+          </div>
+        </form>
 
 
 
@@ -59,55 +146,69 @@
             <a class="nav-link" href="{{ url_for('dashboard',pro=current_user.username) }}">Profile
             </a>
           </li>
-       {% block nav %} {% endblock %}
+          {% block nav %} {% endblock %}
         </ul>
+
         {% block header %} {% endblock %}
       </div>
     </div>
-  </nav>
-    <!--<div class="content">
-      <div class="row">
-        <div class="">
-          <div class="mt-4 mx-auto md:mx-auto">
-            
-      {% with messages = get_flashed_messages() %}
-      {% if messages %}
-        {% for message in messages%}
-          <a class="ml-24 text-white navbar-brand"> {{ message }}</a>
-        {% endfor %}
-      {% endif %}
-      {% endwith %}
+    </nav>
+
+    {% block body %} {% endblock %}
+
+    <div class="container-flex search-container">
+      <div class="row search-row">
+      <div class="col-lg-12 p-0 m-0">
+        <div class="container">
+          <div class="row"  id="datalist">
+            <h1>Search Results goes here</h1>
           </div>
         </div>
       </div>
-    </div>-->
-    {% block body %} {% endblock %}
+      </div>
+    </div>
+
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script>
-      $(document).ready(function(){
-          $("#livebox").on("input",function(e){
-              // $("#datalist").empty();
-              $.ajax({
-                  method:"post",
-                  url:"/livebox",
-                  data:{text:$("#livebox").val()},
-                  success:function(res,v){
-                      console.log(res,v);
-                      // var data = "<ul>";
-                      // $.each(res,function(index,value){
-                      //     data += "<li>"+value.word_eng+"</li>";
-                      // });
-                      // data += "</ul>";
-                      // $("#datalist").html(data);
-                  }
-              });
-          });
-      });
-    </script>
+      <script>
+        $(document).ready(function(){
+            $("#livebox").on("input",function(e){
+                // $("#datalist").empty();
+                $.ajax({
+                    method:"post",
+                    url:"/livebox",
+                    data:{text:$("#livebox").val()},
+                    success:function(res,v){
+                        console.log(res,v);
+                        document.getElementById("datalist").innerHTML = `
+                        ${res.post.map(function(post){
+                          return `
+                            <div class="col-lg-3 col-md-6 m-3">
+                                <a href="/post/${post.post_id}">
+                                  <div class="card h-100 m-2 mb-3 mt-3" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5); ">
+                                    <div class="card-body" style="position:relative;">
+                                      <p class="card-title text-uppercase lead" style="overflow: hidden; position: relative; height: 30%;  max-height: 15ch;">
+                                        ${ post.post_title }
+                                      </p>
+                                      <small class="card-subtitle mb-2 text-muted">by: ${post.post_by}</small>
+                                      <div class="card-text" style="overflow: hidden; height: 100px;"> ${post.post_body} </div>
+                                    </div>
+                                  </div>
+                                </a>
+                            </div>
+                          `
+                        }).join(' ')}
+                        `
+                    }
+                });
+            });
+        });
+
+
+      </script>
   </body>
 </html>
 

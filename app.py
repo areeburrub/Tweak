@@ -22,6 +22,7 @@ from sqlalchemy import desc
 from sqlalchemy.sql import text
 from flask_marshmallow import Marshmallow
 
+
 app = Flask(__name__)
 app.jinja_env.filters['datetimeformat'] = datetimeformat
 
@@ -42,6 +43,7 @@ ma = Marshmallow(app)
 
 
 
+
 class Posts(db.Model): 
     id = db.Column(db.Integer, primary_key=True)
     post_id = db.Column(db.String(30), nullable=False)
@@ -49,7 +51,7 @@ class Posts(db.Model):
     post_title = db.Column(db.String(80), nullable=False)
     post_body = db.Column(db.String(25000), nullable=False)
     post_created = db.Column(db.DateTime, default = datetime.utcnow)
-
+    
 #The Marshmallow Schema
 class PostSchema(ma.SQLAlchemySchema):
     class Meta:
@@ -58,7 +60,7 @@ class PostSchema(ma.SQLAlchemySchema):
     post_title = ma.auto_field()
     post_body = ma.auto_field()
     post_id = ma.auto_field()
-    post_created = ma.auto_field()
+    post_by = ma.auto_field()
 
 
 #USER Table
@@ -142,7 +144,9 @@ def login():
         if user:
             if check_password_hash(user.password, form.password.data):
                 login_user(user, remember=form.remember.data)
-                return redirect(url_for('dashboard', pro = current_user.username))
+
+                return redirect(request.args.get("next") or url_for('dashboard', pro = current_user.username))
+                
         return redirect(url_for('login.html', form=form, msg='Wrong Username or Password'))
     return render_template('login.html', form=form)
 
@@ -329,7 +333,6 @@ def livebox():
         post_result = post_schema.dump(P_results)
         user_result = user_schema.dump(U_results)
         return jsonify({'post':post_result,'user':user_result})
-
 @app.route('/search', methods=['GET', 'POST'])
 def search():
     if (request.method == 'POST'):
