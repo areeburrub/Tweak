@@ -2,6 +2,7 @@
 
 {% block head %}
 <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+<link href="{{url_for('static', filename='rate.css')}}" rel="stylesheet">
 
 <style>
   card-text::-webkit-scrollbar {
@@ -34,6 +35,7 @@
                   <a>{{ post.post_title }}</a>
                   </p>
                   <p class="card-subtitle mb-2 text-uppercase">by:<a href="{{ url_for('dashboard',pro = post.post_by) }}">{{ post.post_by }}</a></p>
+                  <span style="display:none;" id="postid" postid="{{post.post_id}}"></span>
                   <p class="card-subtitle mb-2 text-uppercase">on: {{ post.post_created | datetimeformat }}</p>
                   <div class="card-text" style="overflow: scroll; width:100%; height: auto; "> {{ post.post_body | safe }} </div>
                   {% if name == profile %}
@@ -47,6 +49,27 @@
                   <div class="col-md-3"></div>
                 </div>
                   {% endif %}
+                  
+                  <div class="row mt-5">
+                    <div class="col-md-3"></div>
+                    <div class="col-12 text-center mt-5" id="rate-controller"  reaction="{{rate.Action}}">
+                      <div class="btn-group btn-group-toggle rate" data-toggle="buttons">
+                          <label class="btn btn-primary active">
+                              <input type="radio" name="Like" id="like" autocomplete="off">
+                              <i id="like-icon" class="fa fa-thumbs-up" aria-hidden="true"></i>
+                          </label>
+                          <label class="btn btn-light">
+                              <input type="radio" name="Smile" id="smile" autocomplete="off">
+                              <i id="smile-icon" class="fa fa-smile-o" aria-hidden="true"></i>
+                          </label>
+                          <label class="btn btn-danger">
+                              <input type="radio" name="Dislike" id="dislike" autocomplete="off">
+                              <i id="dislike-icon" class="fa fa-thumbs-down" aria-hidden="true"></i>
+                          </label>
+                      </div>
+                    </div>
+                    <div class="col-md-3"></div>
+                  </div>
                 </div>
               </div>
 
@@ -97,4 +120,167 @@
   </div>
 </div>
 
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<!-- <script src="{{url_for('static', filename='rate.js')}}"></script> -->
+<script>
+ratebar = document.getElementById("rate-controller");
+reaction = ratebar.getAttribute("reaction");
+postId = document.getElementById("postid").getAttribute("postid");
+
+seticon();
+
+var dislike_btn = document.getElementById("dislike");
+var like_btn = document.getElementById("like");
+var smile_btn = document.getElementById("smile");
+
+seticon();
+
+dislike_btn.onclick = function Dislike() {
+    if(reaction == "dislike"){
+        reaction = "nothing"
+        ratebar.setAttribute("reaction", "nothing");
+        console.log(reaction)
+        seticon();
+        // var xhttp = new XMLHttpRequest();
+        // xhttp.open("POST", "/rate", true);
+        // xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        // xhttp.send('Action=nothing&PostID=' + postId);
+        $.ajax({
+            type: "POST",
+            url: "/rate",
+            data: 'Action=nothing&PostID=' + postId,
+            success: function () {}
+        });
+    }
+    else if (reaction == "nothing"||"like"||"smile"){
+        reaction = "dislike"
+        ratebar.setAttribute("reaction", "dislike");
+        console.log(reaction)
+        seticon();
+        $.ajax({
+            type: "POST",
+            url: "/rate",
+            data: 'Action=dislike&PostID=' + postId,
+            success: function () {}
+
+        });
+    } 
+}
+
+like_btn.onclick = function Like() {
+    if(reaction == "like"){
+        reaction = "nothing"
+        ratebar.setAttribute("reaction", "nothing");
+        console.log(reaction)
+        seticon();
+        $.ajax({
+            type: "POST",
+            url: "/rate",
+            data: 'Action=nothing&PostID=' + postId,
+            success: function () {}
+        });
+    }
+    else if (reaction == "nothing"||"smile"||"dislike"){
+        reaction = "like"
+        ratebar.setAttribute("reaction", "like");
+        console.log(reaction)
+        seticon();
+        $.ajax({
+            type: "POST",
+            url: "/rate",
+            data: 'Action=like&PostID=' + postId,
+            success: function () {}
+        });
+    } 
+}
+
+smile_btn.onclick = function Smile() {
+    if(reaction == "smile"){
+        reaction = "nothing"
+        ratebar.setAttribute("reaction", "nothing");
+        console.log(reaction)
+        seticon();
+        $.ajax({
+            type: "POST",
+            url: "/rate",
+            data: 'Action=nothing&PostID=' + postId,
+            success: function () {}
+        });
+    }
+    else if (reaction == "dislike"||"nothing"||"like"){
+        reaction = "smile"
+        ratebar.setAttribute("reaction", "smile");
+        console.log(reaction)
+        seticon();
+        $.ajax({
+            type: "POST",
+            url: "/rate",
+            data: 'Action=smile&PostID=' + postId,
+            success: function () {}
+        });
+    }  
+}
+
+
+function seticon(){
+    dislike_element = document.getElementById("dislike-icon");
+    like_element = document.getElementById("like-icon");
+    smile_element = document.getElementById("smile-icon");
+
+    if(reaction == "dislike"){
+
+        dislike_element.classList.add("fa-thumbs-down-enlarge");
+        like_element.classList.remove("fa-thumbs-up-enlarge");
+        smile_element.classList.remove("fa-smile-enlarge");
+    }
+
+    if(reaction == "like"){
+
+        dislike_element.classList.remove("fa-thumbs-down-enlarge");
+        like_element.classList.add("fa-thumbs-up-enlarge");
+        smile_element.classList.remove("fa-smile-enlarge");
+    }
+
+    if(reaction == "smile"){
+
+        dislike_element.classList.remove("fa-thumbs-down-enlarge");
+        like_element.classList.remove("fa-thumbs-up-enlarge");
+        smile_element.classList.add("fa-smile-enlarge");
+    }
+
+    if(reaction == "nothing"){
+
+        dislike_element.classList.remove("fa-thumbs-down-enlarge");
+        like_element.classList.remove("fa-thumbs-up-enlarge");
+        smile_element.classList.remove("fa-smile-enlarge");
+    }
+}
+</script>
+<!-- <script>
+
+$(function () {
+  $('.like').click(function () { likeFunction(this); });
+  $('.dislike').click(function () { dislikeFunction(this);});
+});
+
+
+function likeFunction(caller) {
+  var postId = caller.parentElement.getAttribute('postid');
+  $.ajax({
+      type: "POST",
+      url: "/rate",
+      data: 'Action=like&PostID=' + postId,
+      success: function () {}
+  });
+}
+function dislikeFunction(caller) {
+  var postId = caller.parentElement.getAttribute('postid');
+  $.ajax({
+      type: "POST",
+      url: "/rate",
+      data: 'Action=dislike&PostID=' + postId,
+      success: function () {}
+  });
+}
+</script> -->
 {% endblock %}

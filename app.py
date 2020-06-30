@@ -43,6 +43,21 @@ ma = Marshmallow(app)
 
 
 
+class Like(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    by = db.Column(db.String(15),nullable=False)
+    Lpid = db.Column(db.String(15),nullable=False)
+    Action = db.Column(db.String(15),nullable=False)
+    time = db.Column(db.DateTime, default = datetime.utcnow)
+
+
+class Comments(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    by = db.Column(db.String(15),nullable=False)
+    Cpid = db.Column(db.String(15),nullable=False)
+    comment = db.Column(db.String(15),nullable=False)
+    time = db.Column(db.DateTime, default = datetime.utcnow)
+
 
 class Posts(db.Model): 
     id = db.Column(db.Integer, primary_key=True)
@@ -309,8 +324,9 @@ def addpost():
 @login_required
 def post(postid):
     post = Posts.query.filter_by(post_id=postid).first()
+    rate = Like.query.filter_by(Lpid=postid,by=current_user.username).first()
     name = post.post_by
-    return render_template('post.html', post=post,name=name, profile = current_user.username)
+    return render_template('post.html', rate=rate, post=post,name=name, profile = current_user.username)
 
 
 #Link to Logout
@@ -333,6 +349,8 @@ def livebox():
         post_result = post_schema.dump(P_results)
         user_result = user_schema.dump(U_results)
         return jsonify({'post':post_result,'user':user_result})
+
+
 @app.route('/search', methods=['GET', 'POST'])
 def search():
     if (request.method == 'POST'):
@@ -342,6 +360,57 @@ def search():
         U_results = User.query.filter(User.username.like(search)).all()
         return render_template('search.html',posts=P_results,users=U_results)
 
+@app.route('/rate', methods=['GET', 'POST'])
+def rate():
+    if(request.method == 'POST'):
+        action = request.form.get('Action')
+        pid = request.form.get('PostID')
+
+        if (action == 'like'):
+            new_like = Like(
+                Lpid = pid,
+                by = current_user.username,
+                Action = 'like')
+            rate = Like.query.filter_by(Lpid=pid).first()
+            if(rate):
+                db.session.delete(rate)
+                db.session.commit()
+            db.session.add(new_like)
+            db.session.commit()
+            return 'done'
+        
+        elif (action == 'dislike'):
+            new_dislike = Like(
+                Lpid = pid,
+                by = current_user.username,
+                Action = 'dislike')
+            rate = Like.query.filter_by(Lpid=pid).first()
+            if(rate):
+                db.session.delete(rate)
+                db.session.commit()
+            db.session.add(new_dislike)
+            db.session.commit()
+            return 'done'
+        
+        elif (action == 'smile'):
+            new_smile = Like(
+                Lpid = pid,
+                by = current_user.username,
+                Action = 'smile')
+            rate = Like.query.filter_by(Lpid=pid).first()
+            if(rate):
+                db.session.delete(rate)
+                db.session.commit()
+            db.session.add(new_smile)
+            db.session.commit()
+            return 'done'
+        
+        elif (action == 'nothing'):
+            rate = Like.query.filter_by(Lpid=pid).first()
+            if(rate):
+                db.session.delete(rate)
+                db.session.commit()
+            return 'done'
         
 
 
@@ -385,6 +454,7 @@ admin = Admin(app, index_view = MyAdminIndexView())
 
 admin.add_view(MyModelView(User, db.session))
 admin.add_view(MyModelView(Posts, db.session))
+admin.add_view(MyModelView(Like, db.session))
 
 if __name__ == '__main__':
     app.run()

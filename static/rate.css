@@ -1,0 +1,30 @@
+.fa-thumbs-down{
+    transform: scaleX(-1) scale(0.7);
+    transition:0.2s;
+}
+.fa-thumbs-down-enlarge{
+    transform:scale(2.3) scaleX(-1);
+}
+.fa-thumbs-up{
+    transform:scale(0.7);
+    transition:0.2s;
+}
+.fa-thumbs-up-enlarge{
+    transform:scale(2.3) scaleX(1);
+}
+.fa-smile-o{
+    background:linear-gradient(45deg,#0105ff,#ff0505);
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    background-clip: text;
+   -webkit-text-fill-color:transparent;
+   transition: 0.2s;
+}
+.fa-smile-enlarge{
+    transform: scale(2.3);
+}
+
+.rate{
+    Box-shadow:0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+}
+

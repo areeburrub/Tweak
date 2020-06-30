@@ -1,5 +1,7 @@
 env/
 *.pyc
 *sample post.html
+*sample post.js
+*sample post.css
 static/profile_pics/
 !*static/profile_pics/default.png
