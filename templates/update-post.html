@@ -3,6 +3,8 @@
 {% block head %}
 
 <!-- Profile Card CSS Starts -->
+<script src="https://cdn.ckeditor.com/4.14.1/standard/ckeditor.js"></script>
+
 <style type="text/css">
 .card-profile {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
@@ -58,7 +60,7 @@
             <div class="row">
               <div class="col-md-12">
                 <div class="form-group">
-                    <textarea name="post_body" class="form-control textarea" rows="10" id="post_body" placeholder="Add Content">{{ post.post_body }}</textarea>
+                    <textarea name="post_body" class="form-control textarea" rows="20" id="post_body" placeholder="Add Content">{{ post.post_body }}</textarea>
                 </div>
               </div>
             </div>
@@ -84,6 +86,10 @@
     </div>
 
   </div>
+  <script>
+          CKEDITOR.replace( 'post_body' );
+  </script>
+  
   {% else %}
   <h1>Login to Your Profile To edit this post</h1>
   {% endif %}

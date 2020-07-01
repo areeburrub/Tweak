@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block head %}
+<script src="https://cdn.ckeditor.com/4.14.1/standard/ckeditor.js"></script>
 
 <!-- Profile Card CSS Starts -->
 <style type="text/css">
@@ -56,7 +57,7 @@
             <div class="row">
               <div class="col-md-12">
               <div class="form-group">
-                    <textarea name="post_body" autocomplete="off" class="form-control textarea" rows="10" id="post_body" placeholder="Add Content, formatting can be done using HTML"></textarea>
+                    <textarea name="post_body" autocomplete="off" class="form-control textarea" rows="20" id="post_body" placeholder="Add Content, formatting can be done using HTML"></textarea>
               </div>
             </div>
             </div>
@@ -72,5 +73,7 @@
     </div>
 
   </div>
-
+  <script>
+    CKEDITOR.replace( 'post_body' );
+</script>
 {% endblock %}
