@@ -325,9 +325,29 @@ def addpost():
 def post(postid):
     post = Posts.query.filter_by(post_id=postid).first()
     rate = Like.query.filter_by(Lpid=postid,by=current_user.username).first()
+    Likes = Like.query.filter_by(Lpid=postid,Action="like").count()
+    Smiles = Like.query.filter_by(Lpid=postid,Action="smile").count()
+    Disikes = Like.query.filter_by(Lpid=postid,Action="dislike").count()
+    
     name = post.post_by
-    return render_template('post.html', rate=rate, post=post,name=name, profile = current_user.username)
+    return render_template('post.html',
+                            rate=rate,
+                            post=post,
+                            name=name,
+                            profile = current_user.username,
+                            Likes = Likes,
+                            Smiles = Smiles,
+                            Dislikes = Disikes
+                            )
 
+
+@app.route('/getrate', methods=['GET', 'POST'])
+def getrate():
+    postid = request.form.get("postid")
+    Likes = Like.query.filter_by(Lpid=postid,Action="like").count()
+    Smiles = Like.query.filter_by(Lpid=postid,Action="smile").count()
+    Dislikes = Like.query.filter_by(Lpid=postid,Action="dislike").count()
+    return jsonify ({'likes':Likes,'smiles':Smiles,'dislikes':Dislikes})
 
 #Link to Logout
 @app.route('/logout')

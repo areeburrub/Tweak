@@ -129,4 +129,5 @@ function seticon(){
         like_element.classList.remove("fa-thumbs-up-enlarge");
         smile_element.classList.remove("fa-smile-enlarge");
     }
+    getrate();
 }
