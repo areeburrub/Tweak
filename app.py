@@ -391,7 +391,7 @@ def rate():
                 Lpid = pid,
                 by = current_user.username,
                 Action = 'like')
-            rate = Like.query.filter_by(Lpid=pid).first()
+            rate = Like.query.filter_by(Lpid=pid,by = current_user.username).first()
             if(rate):
                 db.session.delete(rate)
                 db.session.commit()
@@ -404,7 +404,7 @@ def rate():
                 Lpid = pid,
                 by = current_user.username,
                 Action = 'dislike')
-            rate = Like.query.filter_by(Lpid=pid).first()
+            rate = Like.query.filter_by(Lpid=pid,by = current_user.username).first()
             if(rate):
                 db.session.delete(rate)
                 db.session.commit()
@@ -417,7 +417,7 @@ def rate():
                 Lpid = pid,
                 by = current_user.username,
                 Action = 'smile')
-            rate = Like.query.filter_by(Lpid=pid).first()
+            rate = Like.query.filter_by(Lpid=pid,by = current_user.username).first()
             if(rate):
                 db.session.delete(rate)
                 db.session.commit()
@@ -426,7 +426,7 @@ def rate():
             return 'done'
         
         elif (action == 'nothing'):
-            rate = Like.query.filter_by(Lpid=pid).first()
+            rate = Like.query.filter_by(Lpid=pid,by = current_user.username).first()
             if(rate):
                 db.session.delete(rate)
                 db.session.commit()
