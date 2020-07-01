@@ -120,7 +120,7 @@
         {% for post in posts %}
         <div class="col-lg-3 col-md-4 mt-3">
           <a href="{{ url_for('post', postid=post.post_id) }}">
-            <div class="card h-100 m-2 mb-3 mt-3" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5); ">
+            <div class="card h-100 m-2 mb-3 mt-3" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5); padding-bottom: 10px; ">
               <div class="card-body">
                 
                 <p class="card-title text-uppercase lead" style="overflow: hidden; position: relative; height: 30%;  max-height: 15ch;">
@@ -130,6 +130,7 @@
                 <p class="card-subtitle mb-2 text-muted">on: {{ post.post_created | datetimeformat }}</p>
                 <div class="card-text" style="overflow: hidden;  max-height: 14ch;"> {{ post.post_body | safe }} </div>
               </div>
+              
             </div>
           </a>
         </div>
