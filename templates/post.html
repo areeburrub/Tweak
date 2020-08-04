@@ -36,7 +36,7 @@
                   </p>
                   <p class="card-subtitle mb-2 text-uppercase">by:<a href="{{ url_for('dashboard',pro = post.post_by) }}">{{ post.post_by }}</a></p>
                   <span style="display:none;" id="postid" postid="{{post.post_id}}"></span>
-                  <p class="card-subtitle mb-2 text-uppercase">on: {{ post.post_created | datetimeformat }}</p>
+                  <p class="card-subtitle mb-2 text-uppercase">{{ post.post_created | datetimeformat }}</p>
                   <div class="card-text" style="overflow: scroll; width:100%; height: auto; "> {{ post.post_body | safe }} </div>
                   {% if name == profile %}
                   <div class="row mt-5">

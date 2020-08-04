@@ -10,7 +10,7 @@ class BaseConfig(object):
     DEBUG=False
     SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']
     TESTING = False
-    SECRET_KEY = 'Thisissecret'
+    SECRET_KEY = 'ThisisasecretwhichisAREEBisDiyAreebinreal'
     CSRF_ENABLED = True
     USER_ENABLE_EMAIL = False
 
