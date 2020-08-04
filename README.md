@@ -15,6 +15,10 @@ Tweak have **Flask** as backend and use **Flask-sqlalchemy** for database
 * Website have a page where all the post appears
 * Every logged in user can Create Posts and Publish it
 * Every post also get it's unique route
+* A Search bar is available
+* Like Dislike Reactions can be made
+* CK Editor is used for writting posts
+* Post can be Updated an Deleted
 
 ## Website is Running on Heroku
 [Click Here to Visit : http://tweak-web.herokuapp.com/ ](http://tweak-web.herokuapp.com/)
