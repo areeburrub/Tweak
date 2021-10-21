@@ -1,5 +1,5 @@
 arrow==0.15.6
-Babel==2.8.0
+Babel==2.9.1
 blinker==1.4
 boto3==1.14.3
 botocore==1.17.3
