@@ -31,7 +31,7 @@ itsdangerous==1.1.0
 Jinja2==2.11.2
 jmespath==0.10.0
 MarkupSafe==1.1.1
-marshmallow==3.6.1
+marshmallow==3.26.2
 marshmallow-sqlalchemy==0.23.1
 mime==0.1.0
 passlib==1.7.2
